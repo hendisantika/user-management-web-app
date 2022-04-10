@@ -47,4 +47,8 @@ public class DefaultSecureTokenService implements SecureTokenService {
         secureTokenRepository.save(token);
     }
 
+    @Override
+    public SecureToken findByToken(String token) {
+        return secureTokenRepository.findByToken(token);
+    }
 }
