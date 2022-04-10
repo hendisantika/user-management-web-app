@@ -84,4 +84,8 @@ public class DefaultBruteForceProtectionService implements BruteForceProtectionS
         }
         return failedLogin;
     }
+
+    private UserEntity getUser(final String username) {
+        return userRepository.findByEmail(username);
+    }
 }
