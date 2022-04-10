@@ -41,4 +41,10 @@ public class DefaultSecureTokenService implements SecureTokenService {
         this.saveSecureToken(secureToken);
         return secureToken;
     }
+
+    @Override
+    public void saveSecureToken(SecureToken token) {
+        secureTokenRepository.save(token);
+    }
+
 }
