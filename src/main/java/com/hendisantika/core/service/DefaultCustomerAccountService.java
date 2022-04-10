@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.mail.MessagingException;
 import java.util.Objects;
 
 /**
@@ -58,5 +59,20 @@ public class DefaultCustomerAccountService implements CustomerAccountService {
         secureTokenService.removeToken(secureToken);
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
+    }
+
+    protected void sendResetPasswordEmail(UserEntity user) {
+        SecureToken secureToken = secureTokenService.createSecureToken();
+        secureToken.setUser(user);
+        secureTokenRepository.save(secureToken);
+        ForgotPasswordEmailContext emailContext = new ForgotPasswordEmailContext();
+        emailContext.init(user);
+        emailContext.setToken(secureToken.getToken());
+        emailContext.buildVerificationUrl(baseURL, secureToken.getToken());
+        try {
+            emailService.sendMail(emailContext);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 }
