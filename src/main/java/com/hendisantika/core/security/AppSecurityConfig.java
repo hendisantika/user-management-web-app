@@ -1,11 +1,13 @@
 package com.hendisantika.core.security;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import javax.annotation.Resource;
@@ -99,4 +101,32 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
         };
     }
+
+    /**
+     * <p></p>Creating bean for the custom suucess handler. You can use the custom success handlers for
+     * different use cases like</p>
+     * <li> Redirect customer to different page page based on profile.</li>
+     * <li>Running some additional logic on post authentication before redirecting user</li>
+     * <p>Check the <code>successHandler()</code> in the <code>configure</code> section for configuration details.</p>
+     *
+     * @return Customer success handler
+     */
+    @Bean
+    public CustomSuccessHandler successHandler() {
+        return new CustomSuccessHandler();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
+    }
+
+   /* @Bean
+    public CustomAuthenticationFilter authFilter() throws Exception {
+        CustomAuthenticationFilter filter = new CustomAuthenticationFilter();
+        filter.setAuthenticationManager(authenticationManagerBean());
+        filter.setAuthenticationFailureHandler(failureHandler());
+        filter.setAuthenticationSuccessHandler(successHandler());
+        return filter;
+    } */
 }
