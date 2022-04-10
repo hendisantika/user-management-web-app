@@ -129,4 +129,12 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setAuthenticationSuccessHandler(successHandler());
         return filter;
     } */
+
+    @Bean
+    public LoginAuthenticationFailureHandler failureHandler() {
+        LoginAuthenticationFailureHandler failureHandler = new LoginAuthenticationFailureHandler();
+        failureHandler.setDefaultFailureUrl("/login?error=true");
+        return failureHandler;
+    }
+
 }
