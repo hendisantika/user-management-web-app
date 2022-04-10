@@ -1,5 +1,6 @@
 package com.hendisantika.core.service;
 
+import com.hendisantika.core.user.entity.UserEntity;
 import com.hendisantika.core.user.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,4 +37,9 @@ public class DefaultCustomerAccountService implements CustomerAccountService {
     @Resource
     private PasswordEncoder passwordEncoder;
 
+    @Override
+    public void forgottenPassword(String userName) throws UnkownIdentifierException {
+        UserEntity user = userService.getUserById(userName);
+        sendResetPasswordEmail(user);
+    }
 }
