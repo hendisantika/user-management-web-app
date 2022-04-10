@@ -65,4 +65,21 @@ public class DefaultUserService implements UserService {
     public boolean checkIfUserExist(String email) {
         return userRepository.findByEmail(email) != null;
     }
+
+    @Override
+    public void sendRegistrationConfirmationEmail(UserEntity user) {
+        SecureToken secureToken = secureTokenService.createSecureToken();
+        secureToken.setUser(user);
+        secureTokenRepository.save(secureToken);
+        AccountVerificationEmailContext emailContext = new AccountVerificationEmailContext();
+        emailContext.init(user);
+        emailContext.setToken(secureToken.getToken());
+        emailContext.buildVerificationUrl(baseURL, secureToken.getToken());
+        try {
+            emailService.sendMail(emailContext);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }
