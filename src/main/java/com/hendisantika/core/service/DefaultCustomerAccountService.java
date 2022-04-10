@@ -75,4 +75,10 @@ public class DefaultCustomerAccountService implements CustomerAccountService {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public boolean loginDisabled(String username) {
+        UserEntity user = userRepository.findByEmail(username);
+        return user != null && user.isLoginDisabled();
+    }
 }
