@@ -51,4 +51,12 @@ public class LoginPageController {
         model.addAttribute("accountLocked", Boolean.FALSE);
         return "account/login";
     }
+
+    final String getUserName(HttpSession session) {
+        final String username = (String) session.getAttribute(LAST_USERNAME_KEY);
+        if (StringUtils.isNotEmpty(username)) {
+            session.removeAttribute(LAST_USERNAME_KEY); // we don't need it and removing it.
+        }
+        return username;
+    }
 }
