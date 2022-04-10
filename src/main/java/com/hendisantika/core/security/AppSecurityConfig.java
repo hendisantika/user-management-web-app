@@ -16,6 +16,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 import javax.annotation.Resource;
@@ -199,4 +201,32 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(customAuthenticationProvider);
         //auth.authenticationProvider(customAuthenticationProvider).authenticationProvider(authProvider());
     }
+
+    /**
+     * Using this to persist the remember-me token in the database for more secure approach.
+     * We are not usin gthe memory based remember-me cookie which is not very secure but saving the token in the
+     * DB for better security and secure validation.
+     *
+     * @return
+     */
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
+        db.setDataSource(dataSource);
+        return db;
+    }
+
+    //Spring security LDAP configurations
+
+    /*
+    @Bean
+    BindAuthenticator authenticator(BaseLdapPathContextSource contextSource) {
+        BindAuthenticator authenticator = new BindAuthenticator(contextSource);
+        authenticator.setUserDnPatterns(new String[] { "uid={0},ou=people" });
+        return authenticator;
+    }
+    @Bean
+    LdapAuthenticationProvider authenticationProvider(LdapAuthenticator authenticator) {
+        return new LdapAuthenticationProvider(authenticator);
+    } */
 }
