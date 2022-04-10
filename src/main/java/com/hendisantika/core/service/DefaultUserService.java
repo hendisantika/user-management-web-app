@@ -124,4 +124,9 @@ public class DefaultUserService implements UserService {
         }
         return new MfaTokenData(mfaTokenManager.getQRCode(user.getSecret()), user.getSecret());
     }
+
+    private void encodePassword(UserData source, UserEntity target) {
+        target.setPassword(passwordEncoder.encode(source.getPassword()));
+    }
+
 }
