@@ -1,12 +1,15 @@
 package com.hendisantika.core.security;
 
+import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
 /**
@@ -77,5 +80,23 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests().antMatchers("/admim/**").hasAuthority("ADMIN");
         //http.addFilterAfter(customHeaderAuthFilter(), UsernamePasswordAuthenticationFilter.class);
+    }
+
+    /* @Bean
+    public CustomHeaderAuthFilter customHeaderAuthFilter(){
+        return new CustomHeaderAuthFilter();
+    } */
+
+
+    private AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails> authenticationDetailsSource() {
+
+        return new AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails>() {
+            @Override
+            public CustomWebAuthenticationDetails buildDetails(
+                    HttpServletRequest request) {
+                return new CustomWebAuthenticationDetails(request);
+            }
+
+        };
     }
 }
