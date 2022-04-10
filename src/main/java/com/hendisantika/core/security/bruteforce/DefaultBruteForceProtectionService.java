@@ -93,4 +93,8 @@ public class DefaultBruteForceProtectionService implements BruteForceProtectionS
         return maxFailedLogins;
     }
 
+    public void setMaxFailedLogins(int maxFailedLogins) {
+        this.maxFailedLogins = maxFailedLogins;
+    }
+
 }
