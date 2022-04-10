@@ -27,4 +27,9 @@ public class DefaultMFATokenManager implements MFATokenManager {
 
     @Resource
     private CodeVerifier codeVerifier;
+
+    @Override
+    public String generateSecretKey() {
+        return secretGenerator.generate();
+    }
 }
