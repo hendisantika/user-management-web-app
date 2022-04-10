@@ -1,5 +1,6 @@
 package com.hendisantika.web.controller;
 
+import com.hendisantika.core.exception.InvalidTokenException;
 import com.hendisantika.core.exception.UnknownIdentifierException;
 import com.hendisantika.core.service.CustomerAccountService;
 import com.hendisantika.web.data.user.ResetPasswordData;
@@ -66,6 +67,30 @@ public class PasswordResetController {
         setResetPasswordForm(model, data);
 
         return "/account/changePassword";
+    }
+
+    @PostMapping("/change")
+    public String changePassword(final ResetPasswordData data, final Model model) {
+        try {
+            customerAccountService.updatePassword(data.getPassword(), data.getToken());
+        } catch (InvalidTokenException | UnknownIdentifierException e) {
+            // log error statement
+            model.addAttribute("tokenError",
+                    messageSource.getMessage("user.registration.verification.invalid.token", null,
+                            LocaleContextHolder.getLocale())
+            );
+
+            return "/account/changePassword";
+        }
+        model.addAttribute("passwordUpdateMsg",
+                messageSource.getMessage("user.password.updated.msg", null, LocaleContextHolder.getLocale())
+        );
+        setResetPasswordForm(model, new ResetPasswordData());
+        return "/account/changePassword";
+    }
+
+    private void setResetPasswordForm(final Model model, ResetPasswordData data) {
+        model.addAttribute("forgotPassword", data);
     }
 
 }
