@@ -56,4 +56,9 @@ public class DefaultSecureTokenService implements SecureTokenService {
     public void removeToken(SecureToken token) {
         secureTokenRepository.delete(token);
     }
+
+    @Override
+    public void removeTokenByToken(String token) {
+        secureTokenRepository.removeByToken(token);
+    }
 }
