@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -67,5 +68,20 @@ public class DefaultBruteForceProtectionService implements BruteForceProtectionS
             return user.getFailedLoginAttempts() >= maxFailedLogins;
         }
         return false;
+    }
+
+    protected FailedLogin getFailedLogin(final String username) {
+        FailedLogin failedLogin = cache.get(username.toLowerCase());
+
+        if (failedLogin == null) {
+            //setup the initial data
+            failedLogin = new FailedLogin(0, LocalDateTime.now());
+            cache.put(username.toLowerCase(), failedLogin);
+            if (cache.size() > cacheMaxLimit) {
+
+                // add the logic to remve the key based by timestamp
+            }
+        }
+        return failedLogin;
     }
 }
