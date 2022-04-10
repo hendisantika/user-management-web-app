@@ -1,5 +1,6 @@
 package com.hendisantika.core.security.handlers;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -44,5 +45,11 @@ public class CustomSuccessHandler extends SavedRequestAwareAuthenticationSuccess
             //You can let Spring security handle it for you.
             // super.onAuthenticationSuccess(request, response, authentication);
         }
+    }
+
+
+    protected boolean isAdminAuthority(final Authentication authentication) {
+        return CollectionUtils.isNotEmpty(authentication.getAuthorities())
+                && authentication.getAuthorities().contains(adminAuthority);
     }
 }
