@@ -5,7 +5,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationEventPublisher;
 import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistry;
@@ -165,5 +167,36 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();
+    }
+
+
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring()
+                .antMatchers("/resources/**", "/static/**");
+    }
+
+    /**
+     * DAO authentication provider. This authentication provider will authenticate the user with the help of
+     * @UserdetailsService. This is based on the validating the user with the username and password.
+     * @return
+     @Bean public CustomAuthenticationProvider authProvider() {
+     CustomAuthenticationProvider authenticationProvider = new CustomAuthenticationProvider();
+     authenticationProvider.setUserDetailsService(userDetailsService);
+     return authenticationProvider;
+     } */
+
+    /**
+     * Authentication manager which will be invoked by Spring security filter chain. This authentication
+     * manager will delegate the work to the Authentication provider to
+     * authenticate the user. Look out for the @DaoAuth provider in the above section to see
+     * how it works with this.
+     *
+     * @param auth
+     */
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) {
+        auth.authenticationProvider(customAuthenticationProvider);
+        //auth.authenticationProvider(customAuthenticationProvider).authenticationProvider(authProvider());
     }
 }
