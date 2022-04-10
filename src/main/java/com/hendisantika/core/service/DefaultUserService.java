@@ -1,7 +1,10 @@
 package com.hendisantika.core.service;
 
+import com.hendisantika.core.exception.UserAlreadyExistException;
+import com.hendisantika.core.user.entity.UserEntity;
 import com.hendisantika.core.user.repository.UserGroupRepository;
 import com.hendisantika.core.user.repository.UserRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,4 +40,19 @@ public class DefaultUserService implements UserService {
 
     @Resource
     private MFATokenManager mfaTokenManager;
+
+    @Override
+    public void register(UserData user) throws UserAlreadyExistException {
+        if (checkIfUserExist(user.getEmail())) {
+            throw new UserAlreadyExistException("User already exists for this email");
+        }
+        UserEntity userEntity = new UserEntity();
+        BeanUtils.copyProperties(user, userEntity);
+        encodePassword(user, userEntity);
+        updateCustomerGroup(userEntity);
+        userEntity.setSecret(mfaTokenManager.generateSecretKey());
+        userRepository.save(userEntity);
+        sendRegistrationConfirmationEmail(userEntity);
+
+    }
 }
