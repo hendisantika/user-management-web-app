@@ -1,5 +1,6 @@
 package com.hendisantika.core.service;
 
+import com.hendisantika.core.exception.InvalidTokenException;
 import com.hendisantika.core.exception.UserAlreadyExistException;
 import com.hendisantika.core.user.entity.Group;
 import com.hendisantika.core.user.entity.UserEntity;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 
 /**
  * Created by IntelliJ IDEA.
@@ -81,5 +83,23 @@ public class DefaultUserService implements UserService {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public boolean verifyUser(String token) throws InvalidTokenException {
+        SecureToken secureToken = secureTokenService.findByToken(token);
+        if (Objects.isNull(secureToken) || !StringUtils.equals(token, secureToken.getToken()) || secureToken.isExpired()) {
+            throw new InvalidTokenException("Token is not valid");
+        }
+        UserEntity user = userRepository.getOne(secureToken.getUser().getId());
+        if (Objects.isNull(user)) {
+            return false;
+        }
+        user.setAccountVerified(true);
+        userRepository.save(user); // let's same user details
+
+        // we don't need invalid password now
+        secureTokenService.removeToken(secureToken);
+        return true;
     }
 }
