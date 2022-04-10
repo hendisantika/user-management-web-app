@@ -1,6 +1,7 @@
 package com.hendisantika.core.service;
 
 import com.hendisantika.core.exception.UserAlreadyExistException;
+import com.hendisantika.core.user.entity.Group;
 import com.hendisantika.core.user.entity.UserEntity;
 import com.hendisantika.core.user.repository.UserGroupRepository;
 import com.hendisantika.core.user.repository.UserRepository;
@@ -53,6 +54,10 @@ public class DefaultUserService implements UserService {
         userEntity.setSecret(mfaTokenManager.generateSecretKey());
         userRepository.save(userEntity);
         sendRegistrationConfirmationEmail(userEntity);
+    }
 
+    private void updateCustomerGroup(UserEntity userEntity) {
+        Group group = groupRepository.findByCode("customer");
+        userEntity.addUserGroups(group);
     }
 }
