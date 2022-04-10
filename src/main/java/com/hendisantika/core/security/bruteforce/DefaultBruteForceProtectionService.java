@@ -59,4 +59,13 @@ public class DefaultBruteForceProtectionService implements BruteForceProtectionS
             userRepository.save(user);
         }
     }
+
+    @Override
+    public boolean isBruteForceAttack(String username) {
+        UserEntity user = getUser(username);
+        if (user != null) {
+            return user.getFailedLoginAttempts() >= maxFailedLogins;
+        }
+        return false;
+    }
 }
