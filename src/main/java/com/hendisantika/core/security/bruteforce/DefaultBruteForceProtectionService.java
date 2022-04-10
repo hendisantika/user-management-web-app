@@ -49,4 +49,14 @@ public class DefaultBruteForceProtectionService implements BruteForceProtectionS
             userRepository.save(user);
         }
     }
+
+    @Override
+    public void resetBruteForceCounter(String username) {
+        UserEntity user = getUser(username);
+        if (user != null) {
+            user.setFailedLoginAttempts(0);
+            user.setLoginDisabled(false);
+            userRepository.save(user);
+        }
+    }
 }
