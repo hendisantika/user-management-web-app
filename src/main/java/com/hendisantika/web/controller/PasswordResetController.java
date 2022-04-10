@@ -3,12 +3,16 @@ package com.hendisantika.web.controller;
 import com.hendisantika.core.exception.UnknownIdentifierException;
 import com.hendisantika.core.service.CustomerAccountService;
 import com.hendisantika.web.data.user.ResetPasswordData;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -45,4 +49,23 @@ public class PasswordResetController {
         );
         return REDIRECT_LOGIN;
     }
+
+    @GetMapping("/change")
+    public String changePassword(@RequestParam(required = false) String token, final RedirectAttributes redirAttr,
+                                 final Model model) {
+        if (StringUtils.isEmpty(token)) {
+            redirAttr.addFlashAttribute("tokenError",
+                    messageSource.getMessage("user.registration.verification.missing.token", null,
+                            LocaleContextHolder.getLocale())
+            );
+            return REDIRECT_LOGIN;
+        }
+
+        ResetPasswordData data = new ResetPasswordData();
+        data.setToken(token);
+        setResetPasswordForm(model, data);
+
+        return "/account/changePassword";
+    }
+
 }
