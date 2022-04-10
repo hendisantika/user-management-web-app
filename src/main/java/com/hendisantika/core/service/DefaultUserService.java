@@ -60,4 +60,9 @@ public class DefaultUserService implements UserService {
         Group group = groupRepository.findByCode("customer");
         userEntity.addUserGroups(group);
     }
+
+    @Override
+    public boolean checkIfUserExist(String email) {
+        return userRepository.findByEmail(email) != null;
+    }
 }
