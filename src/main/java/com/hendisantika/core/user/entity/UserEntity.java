@@ -1,5 +1,9 @@
 package com.hendisantika.core.user.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,6 +17,9 @@ import java.util.Set;
  * Date: 10/04/22
  * Time: 13.29
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "user")
 public class UserEntity {

@@ -1,5 +1,9 @@
 package com.hendisantika.core.user.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,6 +22,9 @@ import java.util.Set;
  * Date: 10/04/22
  * Time: 13.28
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "principle_groups")
 public class Group {
