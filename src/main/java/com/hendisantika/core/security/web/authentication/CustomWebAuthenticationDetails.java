@@ -3,6 +3,7 @@ package com.hendisantika.core.security.web.authentication;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Objects;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,5 +27,34 @@ public class CustomWebAuthenticationDetails extends WebAuthenticationDetails {
     public CustomWebAuthenticationDetails(HttpServletRequest request) {
         super(request);
         this.token = request.getParameter("jdjCustomToken");
+    }
+
+    @Override
+    public String toString() {
+        return "CustomWebAuthenticationDetails{" +
+                "token='" + token + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        CustomWebAuthenticationDetails that = (CustomWebAuthenticationDetails) o;
+        return Objects.equals(token, that.token);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), token);
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }
