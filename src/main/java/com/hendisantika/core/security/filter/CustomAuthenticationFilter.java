@@ -1,5 +1,6 @@
 package com.hendisantika.core.security.filter;
 
+import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -27,5 +28,22 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         UsernamePasswordAuthenticationToken authRequest = getAuth(request);
 
         return super.attemptAuthentication(request, response);
+    }
+
+    private UsernamePasswordAuthenticationToken getAuth(final HttpServletRequest request) {
+        String username = obtainUsername(request);
+        String password = obtainPassword(request);
+        String customToken = obtainCustomToken(request);
+
+        String usernameDomain = String.format("%s%s%s", username.trim(),
+                String.valueOf(Character.LINE_SEPARATOR), customToken);
+
+        return new UsernamePasswordAuthenticationToken(
+                usernameDomain, password);
+    }
+
+    @Nullable
+    protected String obtainCustomToken(HttpServletRequest request) {
+        return request.getParameter(customToken);
     }
 }
