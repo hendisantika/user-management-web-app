@@ -51,4 +51,9 @@ public class DefaultMFATokenManager implements MFATokenManager {
                 qrGenerator.getImageMimeType()
         );
     }
+
+    @Override
+    public boolean verifyTotp(String code, String secret) {
+        return codeVerifier.isValidCode(secret, code);
+    }
 }
