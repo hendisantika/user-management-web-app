@@ -6,6 +6,7 @@ import com.hendisantika.core.user.entity.Group;
 import com.hendisantika.core.user.entity.UserEntity;
 import com.hendisantika.core.user.repository.UserGroupRepository;
 import com.hendisantika.core.user.repository.UserRepository;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -101,5 +102,15 @@ public class DefaultUserService implements UserService {
         // we don't need invalid password now
         secureTokenService.removeToken(secureToken);
         return true;
+    }
+
+    @Override
+    public UserEntity getUserById(String id) throws UnkownIdentifierException {
+        UserEntity user = userRepository.findByEmail(id);
+        if (user == null || BooleanUtils.isFalse(user.isAccountVerified())) {
+            // we will ignore in case account is not verified or account does not exists
+            throw new UnkownIdentifierException("unable to find account or account is not active");
+        }
+        return user;
     }
 }
