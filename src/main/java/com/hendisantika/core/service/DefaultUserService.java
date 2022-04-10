@@ -6,6 +6,7 @@ import com.hendisantika.core.user.entity.Group;
 import com.hendisantika.core.user.entity.UserEntity;
 import com.hendisantika.core.user.repository.UserGroupRepository;
 import com.hendisantika.core.user.repository.UserRepository;
+import dev.samstevens.totp.exceptions.QrGenerationException;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -112,5 +113,15 @@ public class DefaultUserService implements UserService {
             throw new UnkownIdentifierException("unable to find account or account is not active");
         }
         return user;
+    }
+
+    @Override
+    public MfaTokenData mfaSetup(String email) throws UnkownIdentifierException, QrGenerationException {
+        UserEntity user = userRepository.findByEmail(email);
+        if (user == null) {
+            // we will ignore in case account is not verified or account does not exists
+            throw new UnkownIdentifierException("unable to find account or account is not active");
+        }
+        return new MfaTokenData(mfaTokenManager.getQRCode(user.getSecret()), user.getSecret());
     }
 }
