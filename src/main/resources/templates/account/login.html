@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="core/head :: head">
+  <meta charset="utf-8">
+</head>
+<body class="hold-transition login-page">
+
+<div class="login-box">
+  <div class="col-md-12">
+    <div class="form-group" data-select2-id="13">
+      <label>Select Language</label>
+      <select aria-hidden="true" class="form-control select2 select2-hidden-accessible" data-select2-id="1"
+              id="locale" style="width: 100%;" tabindex="-1">
+        <option th:selected="__${#locale}__=='en'" th:text="#{lang.eng}" value="en"></option>
+        <option th:selected="__${#locale}__=='de'" th:text="#{lang.de}" value="de"></option>
+      </select>
+    </div>
+  </div>
+  <div class="login-logo">
+    <a href="#">Welcome to Spring Security Course</a></div>
+  <!-- /.login-logo -->
+  <div class="card">
+    <div class="card-body login-card-body">
+      <p th:text="${accountLocked}"></p>
+      <div class="alert alert-success" role="alert" th:if="${verifiedAccountMsg != null}">
+        <p th:text="${verifiedAccountMsg}"></p>
+      </div>
+      <div class="alert alert-success" role="alert" th:if="${resetPasswordMsg != null}">
+        <p th:text="${resetPasswordMsg}"></p>
+      </div>
+      <div class="alert alert-danger" role="alert" th:if="${tokenError != null}">
+        <p th:text="${tokenError}"></p>
+      </div>
+      <div class="alert alert-danger" role="alert" th:if="${invalidSession != null}">
+        <p th:text="${invalidSession}"></p>
+      </div>
+      <p class="login-box-msg">Sign in to start your session</p>
+      <p class="error" th:if="${loginError}"></p>
+      <form method="post" th:action="@{/login}">
+        <div th:if="${param.error!=null and accountLocked !=true}">
+          <div class="alert alert-danger">
+            <span th:text="#{login.error}"/>
+          </div>
+        </div>
+        <div th:if="${param.error!=null and accountLocked ==true}">
+          <div class="alert alert-danger">
+            <span th:text="#{user.account.locked}"/>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input autocomplete=”off” class="form-control" name="username" placeholder="Email" type="email">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-envelope"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input class="form-control" name="password" placeholder="Password" type="password">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input class="form-control" name="jdjCustomToken" placeholder="Token" type="text">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-8">
+            <div class="icheck-primary">
+              <input id="remember" name="remember-me" type="checkbox">
+              <label for="remember">
+                Remember Me
+              </label>
+            </div>
+          </div>
+          <!-- /.col -->
+          <div class="col-4">
+            <button class="btn btn-primary btn-block" type="submit">Sign In</button>
+          </div>
+          <!-- /.col -->
+        </div>
+      </form>
+
+      <div class="social-auth-links text-center mb-3">
+        <p>- OR -</p>
+        <a class="btn btn-block btn-primary" href="#">
+          <i class="fab fa-facebook mr-2"></i> Sign in using Facebook
+        </a>
+        <a class="btn btn-block btn-danger" href="#">
+          <i class="fab fa-google-plus mr-2"></i> Sign in using Google+
+        </a>
+      </div>
+      <!-- /.social-auth-links -->
+
+      <p class="mb-1">
+        <a data-target="#forgotPasswordModel" data-toggle="modal" href="#">I forgot my password</a>
+      </p>
+      <p class="mb-0">
+        <a class="text-center" href="register">Register a new membership</a>
+      </p>
+    </div>
+    <!-- /.login-card-body -->
+  </div>
+</div>
+<div th:replace="account/forgotPassword :: forgotPasswordModel"></div>
+<!-- /.login-box -->
+
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    $("#locale").change(function () {
+      var selectedOption = $('#locale').val();
+      if (selectedOption != '') {
+        window.location.replace('?lang=' + selectedOption);
+      }
+    });
+  });
+
+</script>
+</body>
+</html>
