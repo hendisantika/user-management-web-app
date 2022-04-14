@@ -4,6 +4,8 @@ import com.hendisantika.core.exception.InvalidTokenException;
 import com.hendisantika.core.exception.UnknownIdentifierException;
 import com.hendisantika.core.exception.UserAlreadyExistException;
 import com.hendisantika.core.user.entity.UserEntity;
+import com.hendisantika.web.data.user.MfaTokenData;
+import com.hendisantika.web.data.user.UserData;
 import dev.samstevens.totp.exceptions.QrGenerationException;
 
 /**

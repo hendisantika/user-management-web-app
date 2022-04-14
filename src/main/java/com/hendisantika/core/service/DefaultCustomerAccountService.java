@@ -1,8 +1,16 @@
 package com.hendisantika.core.service;
 
+import com.hendisantika.core.email.context.ForgotPasswordEmailContext;
+import com.hendisantika.core.email.service.EmailService;
 import com.hendisantika.core.exception.InvalidTokenException;
+import com.hendisantika.core.exception.UnknownIdentifierException;
+import com.hendisantika.core.security.jpa.SecureToken;
+import com.hendisantika.core.security.token.SecureTokenService;
+import com.hendisantika.core.security.token.repository.SecureTokenRepository;
 import com.hendisantika.core.user.entity.UserEntity;
 import com.hendisantika.core.user.repository.UserRepository;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,20 +49,20 @@ public class DefaultCustomerAccountService implements CustomerAccountService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public void forgottenPassword(String userName) throws UnkownIdentifierException {
+    public void forgottenPassword(String userName) throws UnknownIdentifierException {
         UserEntity user = userService.getUserById(userName);
         sendResetPasswordEmail(user);
     }
 
     @Override
-    public void updatePassword(String password, String token) throws InvalidTokenException, UnkownIdentifierException {
+    public void updatePassword(String password, String token) throws InvalidTokenException, UnknownIdentifierException {
         SecureToken secureToken = secureTokenService.findByToken(token);
         if (Objects.isNull(secureToken) || !StringUtils.equals(token, secureToken.getToken()) || secureToken.isExpired()) {
             throw new InvalidTokenException("Token is not valid");
         }
         UserEntity user = userRepository.getOne(secureToken.getUser().getId());
         if (Objects.isNull(user)) {
-            throw new UnkownIdentifierException("unable to find user for the token");
+            throw new UnknownIdentifierException("unable to find user for the token");
         }
         secureTokenService.removeToken(secureToken);
         user.setPassword(passwordEncoder.encode(password));

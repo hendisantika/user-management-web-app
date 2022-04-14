@@ -1,5 +1,6 @@
 package com.hendisantika.core.user.entity;
 
+import com.hendisantika.core.security.jpa.SecureToken;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

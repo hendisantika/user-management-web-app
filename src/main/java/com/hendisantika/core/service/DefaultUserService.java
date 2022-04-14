@@ -1,13 +1,23 @@
 package com.hendisantika.core.service;
 
+import com.hendisantika.core.email.context.AccountVerificationEmailContext;
+import com.hendisantika.core.email.service.EmailService;
 import com.hendisantika.core.exception.InvalidTokenException;
+import com.hendisantika.core.exception.UnknownIdentifierException;
 import com.hendisantika.core.exception.UserAlreadyExistException;
+import com.hendisantika.core.security.jpa.SecureToken;
+import com.hendisantika.core.security.mfa.MFATokenManager;
+import com.hendisantika.core.security.token.SecureTokenService;
+import com.hendisantika.core.security.token.repository.SecureTokenRepository;
 import com.hendisantika.core.user.entity.Group;
 import com.hendisantika.core.user.entity.UserEntity;
 import com.hendisantika.core.user.repository.UserGroupRepository;
 import com.hendisantika.core.user.repository.UserRepository;
+import com.hendisantika.web.data.user.MfaTokenData;
+import com.hendisantika.web.data.user.UserData;
 import dev.samstevens.totp.exceptions.QrGenerationException;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -106,21 +116,21 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public UserEntity getUserById(String id) throws UnkownIdentifierException {
+    public UserEntity getUserById(String id) throws UnknownIdentifierException {
         UserEntity user = userRepository.findByEmail(id);
         if (user == null || BooleanUtils.isFalse(user.isAccountVerified())) {
             // we will ignore in case account is not verified or account does not exists
-            throw new UnkownIdentifierException("unable to find account or account is not active");
+            throw new UnknownIdentifierException("unable to find account or account is not active");
         }
         return user;
     }
 
     @Override
-    public MfaTokenData mfaSetup(String email) throws UnkownIdentifierException, QrGenerationException {
+    public MfaTokenData mfaSetup(String email) throws UnknownIdentifierException, QrGenerationException {
         UserEntity user = userRepository.findByEmail(email);
         if (user == null) {
             // we will ignore in case account is not verified or account does not exists
-            throw new UnkownIdentifierException("unable to find account or account is not active");
+            throw new UnknownIdentifierException("unable to find account or account is not active");
         }
         return new MfaTokenData(mfaTokenManager.getQRCode(user.getSecret()), user.getSecret());
     }

@@ -1,6 +1,7 @@
 package com.hendisantika.core.security.token;
 
 import com.hendisantika.core.security.jpa.SecureToken;
+import com.hendisantika.core.security.token.repository.SecureTokenRepository;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

@@ -16,7 +16,7 @@ import java.util.Objects;
  */
 public class CustomWebAuthenticationDetails extends WebAuthenticationDetails {
 
-    private final String token;
+    private String token;
 
     /**
      * Records the remote address and will also set the session Id if a session already
