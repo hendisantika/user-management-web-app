@@ -1,13 +1,12 @@
 package com.hendisantika.core.security.event;
 
 import com.hendisantika.core.security.bruteforce.BruteForceProtectionService;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * Created by IntelliJ IDEA.

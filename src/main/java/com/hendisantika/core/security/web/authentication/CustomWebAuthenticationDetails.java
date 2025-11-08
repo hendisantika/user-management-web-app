@@ -1,8 +1,8 @@
 package com.hendisantika.core.security.web.authentication;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
 /**

@@ -1,8 +1,7 @@
 package com.hendisantika.core.email.service;
 
 import com.hendisantika.core.email.context.AbstractEmailContext;
-
-import javax.mail.MessagingException;
+import jakarta.mail.MessagingException;
 
 /**
  * Created by IntelliJ IDEA.

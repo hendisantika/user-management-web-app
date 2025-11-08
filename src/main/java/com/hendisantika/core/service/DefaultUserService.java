@@ -16,6 +16,7 @@ import com.hendisantika.core.user.repository.UserRepository;
 import com.hendisantika.web.data.user.MfaTokenData;
 import com.hendisantika.web.data.user.UserData;
 import dev.samstevens.totp.exceptions.QrGenerationException;
+import jakarta.annotation.Resource;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -23,7 +24,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Objects;
 
 /**

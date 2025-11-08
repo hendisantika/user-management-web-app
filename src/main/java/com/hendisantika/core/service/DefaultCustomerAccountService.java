@@ -9,13 +9,13 @@ import com.hendisantika.core.security.token.SecureTokenService;
 import com.hendisantika.core.security.token.repository.SecureTokenRepository;
 import com.hendisantika.core.user.entity.UserEntity;
 import com.hendisantika.core.user.repository.UserRepository;
+import jakarta.annotation.Resource;
+import jakarta.mail.MessagingException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import javax.mail.MessagingException;
 import java.util.Objects;
 
 /**

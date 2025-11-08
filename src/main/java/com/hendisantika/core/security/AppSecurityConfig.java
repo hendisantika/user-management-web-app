@@ -6,29 +6,32 @@ import com.hendisantika.core.security.handlers.CustomSuccessHandler;
 import com.hendisantika.core.security.handlers.LoginAuthenticationFailureHandler;
 import com.hendisantika.core.security.web.authentication.CustomWebAuthenticationDetails;
 import com.hendisantika.core.security.web.authentication.CustomWebAuthenticationDetailsSource;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationEventPublisher;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
+import java.util.Collections;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,8 +42,9 @@ import javax.sql.DataSource;
  * Date: 10/04/22
  * Time: 13.42
  */
+@Configuration
 @EnableWebSecurity
-public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
+public class AppSecurityConfig {
 
     @Resource
     UserDetailsService userDetailsService;
@@ -57,47 +61,46 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     @Resource
     private CustomWebAuthenticationDetailsSource authenticationDetailsSource;
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/login", "/register", "/home")
-                .permitAll()
-                .antMatchers("/account/**").hasAnyAuthority("CUSTOMER", "ADMIN")
-                .and()
-                .exceptionHandling().accessDeniedHandler(accessDeniedHandler())
-                .and()
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(authz -> authz
+                        .requestMatchers("/login", "/register", "/home").permitAll()
+                        .requestMatchers("/account/**").hasAnyAuthority("CUSTOMER", "ADMIN")
+                        .requestMatchers("/admim/**").hasAuthority("ADMIN")
+                        .anyRequest().authenticated()
+                )
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(accessDeniedHandler())
+                )
                 //Setting HTTPS for my account
-                .requiresChannel().anyRequest().requiresSecure()
-                .and()
+                .requiresChannel(channel -> channel
+                        .anyRequest().requiresSecure()
+                )
                 // Remember me configurations
-                .rememberMe().tokenRepository(persistentTokenRepository())
-                .rememberMeCookieDomain("domain")
-                .rememberMeCookieName("custom-remember-me-cookie")
-                .userDetailsService(this.userDetailsService)
-                .tokenValiditySeconds(2000)
-                .useSecureCookie(true)
-
+                .rememberMe(remember -> remember
+                        .tokenRepository(persistentTokenRepository())
+                        .rememberMeCookieDomain("domain")
+                        .rememberMeCookieName("custom-remember-me-cookie")
+                        .userDetailsService(this.userDetailsService)
+                        .tokenValiditySeconds(2000)
+                        .useSecureCookie(true)
+                )
                 //Login configurations
-                .and()
-                .formLogin()
-                .defaultSuccessUrl("/account/home")
-                .loginPage("/login")
-                .failureUrl("/login?error=true")
-                .successHandler(successHandler())
-                .failureHandler(failureHandler())
-                .authenticationDetailsSource(authenticationDetailsSource) //injecting custom authenitcation source
+                .formLogin(form -> form
+                        .defaultSuccessUrl("/account/home")
+                        .loginPage("/login")
+                        .failureUrl("/login?error=true")
+                        .successHandler(successHandler())
+                        .failureHandler(failureHandler())
+                        .authenticationDetailsSource(authenticationDetailsSource)
+                )
                 //logout configurations
-                .and()
-                .logout().deleteCookies("dummyCookie")
-                .logoutSuccessUrl("/login");
+                .logout(logout -> logout
+                        .deleteCookies("dummyCookie")
+                        .logoutSuccessUrl("/login")
+                );
 
-                /*
-                .and()
-                .sessionManagement()
-                .sessionFixation().none(); */
-
-        http.authorizeRequests().antMatchers("/admim/**").hasAuthority("ADMIN");
-        //http.addFilterAfter(customHeaderAuthFilter(), UsernamePasswordAuthenticationFilter.class);
+        return http.build();
     }
 
     /* @Bean
@@ -178,10 +181,10 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-    @Override
-    public void configure(WebSecurity web) {
-        web.ignoring()
-                .antMatchers("/resources/**", "/static/**");
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring()
+                .requestMatchers("/resources/**", "/static/**");
     }
 
     /**
@@ -199,13 +202,10 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
      * manager will delegate the work to the Authentication provider to
      * authenticate the user. Look out for the @DaoAuth provider in the above section to see
      * how it works with this.
-     *
-     * @param auth
      */
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(customAuthenticationProvider);
-        //auth.authenticationProvider(customAuthenticationProvider).authenticationProvider(authProvider());
+    @Bean
+    public AuthenticationManager authenticationManager() {
+        return new ProviderManager(Collections.singletonList(customAuthenticationProvider));
     }
 
     /**
