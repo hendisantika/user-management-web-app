@@ -34,7 +34,7 @@ public class CustomAuthenticationProvider extends DaoAuthenticationProvider {
 
     @Autowired
     public CustomAuthenticationProvider(UserDetailsService userDetailsService) {
-        super.setUserDetailsService(userDetailsService);
+        super(userDetailsService);
     }
 
     protected void additionalAuthenticationChecks(UserDetails userDetails,

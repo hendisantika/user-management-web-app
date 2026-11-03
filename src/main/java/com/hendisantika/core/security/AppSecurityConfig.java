@@ -16,6 +16,7 @@ import org.springframework.security.authentication.AuthenticationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -73,9 +74,7 @@ public class AppSecurityConfig {
                         .accessDeniedHandler(accessDeniedHandler())
                 )
                 //Setting HTTPS for my account
-                .requiresChannel(channel -> channel
-                        .anyRequest().requiresSecure()
-                )
+                .redirectToHttps(Customizer.withDefaults())
                 // Remember me configurations
                 .rememberMe(remember -> remember
                         .tokenRepository(persistentTokenRepository())
