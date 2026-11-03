@@ -31,6 +31,18 @@ Authentication (MFA), brute force protection, and session management.
 |-------------|-----------------|
 | ![Login error](img/login-error.png) | ![Forgot password modal](img/forgot-password.png) |
 
+| Register | Register Validation |
+|----------|---------------------|
+| ![Register page](img/register.png) | ![Register validation errors](img/register-validation.png) |
+
+| Registration Success (MFA QR Code) | Duplicate Email |
+|------------------------------------|-----------------|
+| ![Registration success with MFA QR code](img/register-success.png) | ![Duplicate email](img/register-duplicate.png) |
+
+| Account Verified |
+|------------------|
+| ![Account verified](img/register-verified.png) |
+
 ## Technology Stack
 
 - **Java 25** (LTS)
