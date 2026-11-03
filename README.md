@@ -1,6 +1,11 @@
 # User Management Web App
 
-A comprehensive Spring Boot 3.5.7 application for user management with advanced security features including Multi-Factor
+[![Java CI with Maven](https://github.com/hendisantika/user-management-web-app/actions/workflows/maven.yml/badge.svg)](https://github.com/hendisantika/user-management-web-app/actions/workflows/maven.yml)
+![Java](https://img.shields.io/badge/Java-25-orange?logo=openjdk)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1.2-6DB33F?logo=springboot)
+![Dependabot](https://img.shields.io/badge/Dependabot-enabled-025E8C?logo=dependabot)
+
+A comprehensive Spring Boot 4.1.2 application for user management with advanced security features including Multi-Factor
 Authentication (MFA), brute force protection, and session management.
 
 ## Features
@@ -18,9 +23,9 @@ Authentication (MFA), brute force protection, and session management.
 
 ## Technology Stack
 
-- **Java 21**
-- **Spring Boot 3.5.7**
-    - Spring Security 6
+- **Java 25** (LTS)
+- **Spring Boot 4.1.2** (Spring Framework 7)
+    - Spring Security 7
     - Spring Data JPA
     - Spring Session with Redis
     - Spring Mail
@@ -28,7 +33,7 @@ Authentication (MFA), brute force protection, and session management.
 - **MySQL** - Primary database
 - **Redis** - Session storage
 - **Lombok** - Code generation
-- **Maven** - Build tool
+- **Maven 3.10** (via Maven Wrapper) - Build tool
 - **Docker** - Containerization (optional)
 
 ## Quick Start with Docker (Recommended)
@@ -144,7 +149,7 @@ The Docker setup consists of:
 
 Before running the application, ensure you have the following installed:
 
-1. **Java Development Kit (JDK) 21 or higher**
+1. **Java Development Kit (JDK) 25 or higher**
    ```bash
    java -version
    ```
@@ -159,7 +164,7 @@ Before running the application, ensure you have the following installed:
    redis-server --version
    ```
 
-4. **Maven 3.8+** (or use the included Maven Wrapper)
+4. **Maven 3.9+** (or use the included Maven Wrapper, which uses Maven 3.10.0)
    ```bash
    ./mvnw --version
    ```
@@ -396,6 +401,37 @@ Run tests with:
 ./mvnw test
 ```
 
+> **Note:** `UserManagementWebAppApplicationTests#contextLoads` boots the full Spring context, so MySQL
+> (`localhost:3306`, `root`/`root`) and Redis (`localhost:6379`) must be running. Quick way to start them:
+>
+> ```bash
+> docker run -d --rm --name ci-mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=user_management -p 3306:3306 mysql:9.5.0
+> docker run -d --rm --name ci-redis -p 6379:6379 redis:8-alpine
+> ```
+
+## Continuous Integration
+
+GitHub Actions workflow [`.github/workflows/maven.yml`](.github/workflows/maven.yml) runs on every push and pull request to `main`:
+
+1. Starts **MySQL 9.5.0** and **Redis 8** as service containers
+2. Sets up **Temurin JDK 25** with Maven dependency caching
+3. Builds and tests the project with `./mvnw -B package`
+4. On push to `main`, submits the Maven dependency graph to GitHub for better Dependabot alerts
+
+## Dependency Updates (Dependabot)
+
+[`.github/dependabot.yml`](.github/dependabot.yml) keeps dependencies up to date automatically:
+
+| Ecosystem        | Schedule (Asia/Jakarta)  | Notes                                                                                     |
+|------------------|--------------------------|-------------------------------------------------------------------------------------------|
+| `maven`          | Daily, 21:00             | Grouped: Spring (minor/patch), Testcontainers, Apache Commons, Maven build, other minor/patch |
+| `github-actions` | Weekly (Monday), 21:00   | All actions grouped in a single PR                                                        |
+| `docker`         | Weekly (Monday), 21:00   | `Dockerfile` base images; major `eclipse-temurin` bumps ignored to stay on JDK 25 LTS      |
+| `docker-compose` | Weekly (Monday), 21:00   | Images in `docker-compose.yml`                                                            |
+
+PRs are labelled (`dependencies`, `java`, `github-actions`, `docker`) and use conventional commit prefixes
+(`chore(deps)`, `ci(deps)`, `chore(docker)`).
+
 ## Troubleshooting
 
 ### Common Issues
@@ -499,6 +535,10 @@ This project is open source and available for educational purposes.
 ## Version History
 
 - **0.0.1-SNAPSHOT** - Current development version
+    - Upgraded to **JDK 25** (pom, Dockerfile & GitHub Actions)
+    - Upgraded to **Spring Boot 4.1.2** / Spring Security 7 (migrated removed APIs)
+    - GitHub Actions CI with MySQL & Redis service containers
+    - Enhanced Dependabot (Maven, GitHub Actions, Docker, Docker Compose with grouping)
     - Updated to Spring Boot 3.5.7
     - Migrated from Java EE (javax.*) to Jakarta EE
     - Updated Spring Security configuration to version 6
