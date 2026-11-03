@@ -1,6 +1,7 @@
 package com.hendisantika.core.user.repository;
 
 import com.hendisantika.core.user.entity.Group;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +15,6 @@ import org.springframework.stereotype.Repository;
  * Time: 13.31
  */
 @Repository
-public interface UserGroupRepository extends PagingAndSortingRepository<Group, Long> {
+public interface UserGroupRepository extends PagingAndSortingRepository<Group, Long>, CrudRepository<Group, Long> {
     Group findByCode(String code);
 }

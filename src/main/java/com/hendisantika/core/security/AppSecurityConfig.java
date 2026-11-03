@@ -65,7 +65,7 @@ public class AppSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/login", "/register", "/home").permitAll()
+                        .requestMatchers("/login", "/register", "/register/**", "/home").permitAll()
                         .requestMatchers("/dist/**", "/plugins/**", "/js/**", "/favicon.ico", "/error").permitAll()
                         .requestMatchers("/account/**").hasAnyAuthority("CUSTOMER", "ADMIN")
                         .requestMatchers("/admim/**").hasAuthority("ADMIN")

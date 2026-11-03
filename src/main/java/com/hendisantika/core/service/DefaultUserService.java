@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Objects;
 
 /**
@@ -72,6 +73,17 @@ public class DefaultUserService implements UserService {
 
     private void updateCustomerGroup(UserEntity userEntity) {
         Group group = groupRepository.findByCode("customer");
+        if (group == null) {
+            // seed the default customer group on first registration
+            group = new Group();
+            group.setCode("customer");
+            group.setName("Customer");
+            group.setUsers(new HashSet<>());
+            group = groupRepository.save(group);
+        }
+        if (group.getUsers() == null) {
+            group.setUsers(new HashSet<>());
+        }
         userEntity.addUserGroups(group);
     }
 
