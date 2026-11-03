@@ -21,6 +21,16 @@ Authentication (MFA), brute force protection, and session management.
 - LDAP Integration Support
 - Role-Based Access Control (RBAC)
 
+## Screenshots
+
+| Home | Login (with MFA token) |
+|------|------------------------|
+| ![Home page](img/home.png) | ![Login page](img/login.png) |
+
+| Login Error | Forgot Password |
+|-------------|-----------------|
+| ![Login error](img/login-error.png) | ![Forgot password modal](img/forgot-password.png) |
+
 ## Technology Stack
 
 - **Java 25** (LTS)
