@@ -57,6 +57,8 @@ Authentication (MFA), brute force protection, and session management.
 - **Lombok** - Code generation
 - **Maven 3.10** (via Maven Wrapper) - Build tool
 - **Docker** - Containerization (optional)
+- **Testcontainers** - Docker-based integration testing
+- **Spring Boot Docker Compose** - Automatic Docker Compose lifecycle management
 
 ## Quick Start with Docker (Recommended)
 
@@ -431,6 +433,57 @@ Run tests with:
 > docker run -d --rm --name ci-redis -p 6379:6379 redis:8-alpine
 > ```
 
+#### Integration Testing with Testcontainers
+
+The project includes Testcontainers support for Docker-based integration testing with MySQL 9.5.0:
+
+```bash
+# Run integration tests with Testcontainers
+./mvnw test -Dtest=MySQLContainerTest
+
+# Run all tests including integration tests
+./mvnw verify
+```
+
+**Sample Integration Test** (Testcontainers 2.x + `@ServiceConnection`, skipped when Docker is not available):
+```java
+@SpringBootTest
+@Testcontainers(disabledWithoutDocker = true)
+class MySQLContainerTest {
+    @Container
+    @ServiceConnection
+    static MySQLContainer mysql = new MySQLContainer(DockerImageName.parse("mysql:9.5.0"))
+            .withDatabaseName("testdb")
+            .withUsername("testuser")
+            .withPassword("testpass");
+
+    @Container
+    @ServiceConnection(name = "redis")
+    static GenericContainer<?> redis = new GenericContainer<>(DockerImageName.parse("redis:8-alpine"))
+            .withExposedPorts(6379);
+}
+```
+
+See [`DOCKER_LIBRARIES.md`](DOCKER_LIBRARIES.md) for details on the Docker-related libraries.
+
+#### Spring Boot Docker Compose Support
+
+When running locally, Spring Boot can automatically manage your Docker Compose lifecycle:
+
+1. **Enable Docker Compose support** in `application-docker.properties`:
+   ```properties
+   spring.docker.compose.enabled=true
+   spring.docker.compose.file=docker-compose.yml
+   spring.docker.compose.lifecycle-management=start_and_stop
+   ```
+
+2. **Run the application** - Docker Compose will start automatically:
+   ```bash
+   ./mvnw spring-boot:run -Dspring-boot.run.profiles=docker
+   ```
+
+3. **Stop the application** - Docker Compose will stop automatically
+
 ## Continuous Integration
 
 GitHub Actions workflow [`.github/workflows/maven.yml`](.github/workflows/maven.yml) runs on every push and pull request to `main`:
@@ -570,6 +623,9 @@ This project is open source and available for educational purposes.
     - Multi-stage Dockerfile for optimized image size
     - Health checks for all services
     - Persistent MySQL data volumes
+    - Spring Boot Docker Compose support for automatic lifecycle management
+    - Testcontainers integration for Docker-based testing
+    - Cloud Native Buildpacks support for building Docker images
     - Added comprehensive documentation
 
 ## Support
