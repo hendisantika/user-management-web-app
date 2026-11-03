@@ -1,5 +1,6 @@
 version: 2
 updates:
+  # Maven dependencies (pom.xml & Maven Wrapper)
   - package-ecosystem: maven
     directory: "/"
     schedule:
@@ -7,3 +8,95 @@ updates:
       time: '21:00'
       timezone: Asia/Jakarta
     open-pull-requests-limit: 10
+    target-branch: main
+    assignees:
+      - hendisantika
+    labels:
+      - dependencies
+      - java
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+      include: scope
+    groups:
+      spring-boot:
+        patterns:
+          - "org.springframework*"
+        update-types:
+          - minor
+          - patch
+      testcontainers:
+        patterns:
+          - "org.testcontainers*"
+      apache-commons:
+        patterns:
+          - "org.apache.commons*"
+      maven-build:
+        patterns:
+          - "org.apache.maven*"
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+        exclude-patterns:
+          - "org.springframework*"
+
+  # GitHub Actions used in .github/workflows
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: '21:00'
+      timezone: Asia/Jakarta
+    open-pull-requests-limit: 5
+    assignees:
+      - hendisantika
+    labels:
+      - dependencies
+      - github-actions
+    commit-message:
+      prefix: "ci(deps)"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  # Docker base images (Dockerfile)
+  - package-ecosystem: docker
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: '21:00'
+      timezone: Asia/Jakarta
+    open-pull-requests-limit: 5
+    assignees:
+      - hendisantika
+    labels:
+      - dependencies
+      - docker
+    commit-message:
+      prefix: "chore(docker)"
+    ignore:
+      # Stay on the Java 25 LTS line; skip non-LTS major JDK images
+      - dependency-name: "eclipse-temurin"
+        update-types:
+          - version-update:semver-major
+
+  # Docker Compose services (docker-compose.yml)
+  - package-ecosystem: docker-compose
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: '21:00'
+      timezone: Asia/Jakarta
+    open-pull-requests-limit: 5
+    assignees:
+      - hendisantika
+    labels:
+      - dependencies
+      - docker
+    commit-message:
+      prefix: "chore(docker)"
