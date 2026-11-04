@@ -67,6 +67,7 @@ public class AppSecurityConfig {
         http.authorizeHttpRequests(authz -> authz
                         .requestMatchers("/login", "/register", "/register/**", "/home").permitAll()
                         .requestMatchers("/dist/**", "/plugins/**", "/js/**", "/favicon.ico", "/error").permitAll()
+                        .requestMatchers("/actuator/health", "/actuator/health/**").permitAll()
                         .requestMatchers("/account/**").hasAnyAuthority("CUSTOMER", "ADMIN")
                         .requestMatchers("/admim/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated()

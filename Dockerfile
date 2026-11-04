@@ -34,8 +34,9 @@ USER spring:spring
 EXPOSE 8080 8443
 
 # Health check
+# HTTP (8080) redirects to HTTPS, so check the HTTPS port directly (self-signed certificate)
 HEALTHCHECK --interval=30s --timeout=3s --start-period=60s \
-  CMD wget --quiet --tries=1 --spider http://localhost:8080/actuator/health || exit 1
+  CMD wget --quiet --tries=1 --spider --no-check-certificate https://localhost:8443/actuator/health || exit 1
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]

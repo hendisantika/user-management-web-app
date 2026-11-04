@@ -86,7 +86,7 @@ Spring Boot application.
     - Pull MySQL 9.5.0, Redis 7, and build the Spring Boot application
     - Create a dedicated Docker network for the services
     - Start MySQL on port 3307 (to avoid conflicts with local MySQL)
-    - Start Redis on port 6379
+    - Start Redis on port 6380 (to avoid conflicts with local Redis)
     - Start the application on ports 8080 (HTTP) and 8443 (HTTPS)
     - Create persistent volume for MySQL data
 
@@ -122,8 +122,8 @@ The Docker setup includes:
     - Root password: `53cret`
     - Persistent volume: `mysql-data`
 
-- **Redis 7**
-    - Port: 6379
+- **Redis 8**
+    - Port: 6380 (external) → 6379 (internal)
     - Used for session management
 
 - **Spring Boot App**
@@ -227,8 +227,8 @@ Before running the application, ensure you have the following installed:
 
    In `src/main/resources/application.properties`:
    ```properties
-   spring.redis.host=localhost
-   spring.redis.port=6379
+   spring.data.redis.host=localhost
+   spring.data.redis.port=6379
    ```
 
 ## Email Configuration
@@ -483,6 +483,13 @@ When running locally, Spring Boot can automatically manage your Docker Compose l
    ```
 
 3. **Stop the application** - Docker Compose will stop automatically
+
+> **Notes:**
+> - Only the `mysql` and `redis` services are started (`spring.docker.compose.start.arguments=mysql,redis`),
+>   so the `app` service does not clash with the locally running application on ports 8080/8443.
+> - Connection details are taken from the running containers (MySQL `localhost:3307`, Redis `localhost:6380`),
+>   overriding the `mysql`/`redis` hostnames in `application-docker.properties`.
+> - HTTP sessions are stored in Redis via `spring-boot-starter-session-data-redis`.
 
 ## Continuous Integration
 

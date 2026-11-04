@@ -20,10 +20,10 @@ docker compose up -d
 - **Password:** 53cret
 - **Root Password:** 53cret
 
-### Redis 7
+### Redis 8
 
 - **Container Name:** user-management-redis
-- **Port:** 6379
+- **Port:** 6380 (external) → 6379 (internal)
 
 ### Spring Boot Application
 
