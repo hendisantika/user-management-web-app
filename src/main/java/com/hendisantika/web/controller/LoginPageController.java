@@ -5,6 +5,8 @@ import com.hendisantika.web.data.user.ResetPasswordData;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,9 +31,13 @@ public class LoginPageController {
     @Resource(name = "customerAccountService")
     private CustomerAccountService customerAccountService;
 
+    @Resource
+    private MessageSource messageSource;
+
     @GetMapping
     public String login(@RequestParam(value = "error", defaultValue = "false") boolean loginError,
                         @RequestParam(value = "invalid-session", defaultValue = "false") boolean invalidSession,
+                        @RequestParam(value = "expired", defaultValue = "false") boolean sessionExpired,
                         final Model model, HttpSession session) {
 
         String userName = getUserName(session);
@@ -45,6 +51,10 @@ public class LoginPageController {
         if (invalidSession) {
             model.addAttribute("invalidSession", "You already have an active session. We do not allow multiple active" +
                     " sessions");
+        }
+        if (sessionExpired) {
+            model.addAttribute("invalidSession",
+                    messageSource.getMessage("user.session.expired", null, LocaleContextHolder.getLocale()));
         }
         model.addAttribute("forgotPassword", new ResetPasswordData());
         model.addAttribute("accountLocked", Boolean.FALSE);

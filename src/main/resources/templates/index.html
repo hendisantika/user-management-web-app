@@ -102,6 +102,7 @@
           <div class="card-header"><h3 class="card-title">Your Active Sessions</h3>
 
           </div>
+          <div class="alert alert-success m-3" role="alert" th:if="${sessionMsg != null}" th:text="${sessionMsg}"></div>
           <!-- /.card-header -->
           <div class="card-body table-responsive p-0">
             <table class="table table-hover text-nowrap">
@@ -115,8 +116,14 @@
               <tbody>
               <tr th:each="activesession : ${currentSession}">
                 <td th:text="${activesession.sessionId}"></td>
-                <td th:text="${#calendars.format(activesession.lastRequest, 'yyyy-MM-dd HH:mm')}"></td>
-                <td>11-7-2014</td>
+                <td th:text="${#dates.format(activesession.lastRequest, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                <td>
+                  <span class="badge badge-success" th:if="${activesession.sessionId == currentSessionId}">Current session</span>
+                  <form method="post" th:action="@{/account/sessions/{id}/logout(id=${activesession.sessionId})}"
+                        th:unless="${activesession.sessionId == currentSessionId}">
+                    <button class="btn btn-sm btn-danger" type="submit">Logout</button>
+                  </form>
+                </td>
               </tr>
               </tbody>
             </table>

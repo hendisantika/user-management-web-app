@@ -21,7 +21,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -30,6 +29,9 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.session.FindByIndexNameSessionRepository;
+import org.springframework.session.Session;
+import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 
 import javax.sql.DataSource;
 import java.util.Collections;
@@ -63,7 +65,7 @@ public class AppSecurityConfig {
     private CustomWebAuthenticationDetailsSource authenticationDetailsSource;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, SessionRegistry sessionRegistry) throws Exception {
         http.authorizeHttpRequests(authz -> authz
                         .requestMatchers("/login", "/register", "/register/**", "/home").permitAll()
                         .requestMatchers("/dist/**", "/plugins/**", "/js/**", "/favicon.ico", "/error").permitAll()
@@ -94,6 +96,12 @@ public class AppSecurityConfig {
                         .successHandler(successHandler())
                         .failureHandler(failureHandler())
                         .authenticationDetailsSource(authenticationDetailsSource)
+                )
+                // Session management backed by Spring Session (Redis) so active sessions can be listed/expired
+                .sessionManagement(session -> session
+                        .maximumSessions(-1)
+                        .sessionRegistry(sessionRegistry)
+                        .expiredUrl("/login?expired=true")
                 )
                 //logout configurations
                 .logout(logout -> logout
@@ -163,10 +171,13 @@ public class AppSecurityConfig {
         return new DefaultAuthenticationEventPublisher(applicationEventPublisher);
     }
 
+    /**
+     * Session registry backed by the indexed Spring Session Redis repository, so sessions can be found by principal.
+     */
     @Bean
-    public SessionRegistry sessionRegistry() {
-        SessionRegistry sessionRegistry = new SessionRegistryImpl();
-        return sessionRegistry;
+    public <S extends Session> SpringSessionBackedSessionRegistry<S> sessionRegistry(
+            FindByIndexNameSessionRepository<S> sessionRepository) {
+        return new SpringSessionBackedSessionRegistry<>(sessionRepository);
     }
 
     /**
