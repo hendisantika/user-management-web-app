@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Date: 04/11/26
  * Time: 06.53
  * <p>
- * Integration test using Testcontainers (MySQL 9.5.0 & Redis 8).
+ * Integration test using Testcontainers (MySQL 9.7.2 & Redis 8).
  * Connection details are wired automatically via {@link ServiceConnection}.
  * The test is skipped when Docker is not available.
  * <p>
@@ -35,7 +35,7 @@ class MySQLContainerTest {
 
     @Container
     @ServiceConnection
-    static MySQLContainer mysql = new MySQLContainer(DockerImageName.parse("mysql:9.5.0"))
+    static MySQLContainer mysql = new MySQLContainer(DockerImageName.parse("mysql:9.7.2"))
             .withDatabaseName("testdb")
             .withUsername("testuser")
             .withPassword("testpass");
@@ -57,6 +57,6 @@ class MySQLContainerTest {
     @Test
     void testDatabaseConnection() {
         String version = jdbcTemplate.queryForObject("SELECT VERSION()", String.class);
-        assertThat(version).startsWith("9.5");
+        assertThat(version).startsWith("9.7");
     }
 }

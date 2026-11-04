@@ -25,7 +25,7 @@ jobs:
     # MySQL & Redis are required by the Spring context test (contextLoads)
     services:
       mysql:
-        image: mysql:9.5.0
+        image: mysql:9.7.2
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: user_management

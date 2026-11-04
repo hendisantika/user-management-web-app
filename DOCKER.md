@@ -10,7 +10,7 @@ docker compose up -d
 
 ## Service Details
 
-### MySQL 9.5.0
+### MySQL 9.7.2
 
 - **Container Name:** user-management-mysql
 - **External Port:** 3307

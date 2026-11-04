@@ -77,7 +77,7 @@ spring.docker.compose.lifecycle-management=start_and_stop
 **Features:**
 - Docker-based integration testing
 - Automatic container lifecycle management
-- Supports MySQL 9.5.0 for testing
+- Supports MySQL 9.7.2 for testing
 - Database schema validation
 - Connection pooling tests
 
@@ -89,7 +89,7 @@ class MySQLContainerTest {
 
     @Container
     @ServiceConnection
-    static MySQLContainer mysql = new MySQLContainer(DockerImageName.parse("mysql:9.5.0"))
+    static MySQLContainer mysql = new MySQLContainer(DockerImageName.parse("mysql:9.7.2"))
             .withDatabaseName("testdb")
             .withUsername("testuser")
             .withPassword("testpass");
@@ -104,7 +104,7 @@ class MySQLContainerTest {
 
     @Test
     void testDatabaseConnection() {
-        assertThat(jdbcTemplate.queryForObject("SELECT VERSION()", String.class)).startsWith("9.5");
+        assertThat(jdbcTemplate.queryForObject("SELECT VERSION()", String.class)).startsWith("9.7");
     }
 }
 ```
@@ -164,7 +164,7 @@ docker run -p 8080:8080 -p 8443:8443 \
 - **No manual setup**: Services configured automatically
 
 ### 2. Testing Quality
-- **Real database**: Tests run against actual MySQL 9.5.0
+- **Real database**: Tests run against actual MySQL 9.7.2
 - **Isolated environment**: Each test gets a fresh container
 - **Parallel execution**: Multiple test suites can run simultaneously
 
@@ -191,7 +191,7 @@ docker run -p 8080:8080 -p 8443:8443 \
 @SpringBootTest
 @Testcontainers
 @TestPropertySource(properties = {
-    "spring.datasource.url=jdbc:tc:mysql:9.5.0:///testdb"
+    "spring.datasource.url=jdbc:tc:mysql:9.7.2:///testdb"
 })
 class UserRepositoryTest {
 
@@ -307,6 +307,6 @@ lsof -i :6379
 
 - **Spring Boot:** 4.1.2
 - **Testcontainers:** 2.0.5 (managed by Spring Boot)
-- **MySQL Container:** 9.5.0
+- **MySQL Container:** 9.7.2
 - **Redis Container:** 8-alpine
 - **Java Version:** 25

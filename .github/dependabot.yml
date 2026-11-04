@@ -101,7 +101,7 @@ updates:
     commit-message:
       prefix: "chore(docker)"
     ignore:
-      # Keep MySQL aligned with CI & Testcontainers (mysql:9.5.0); skip major bumps
+      # Keep MySQL aligned with CI & Testcontainers (mysql:9.7.2); skip major bumps
       - dependency-name: "mysql"
         update-types:
           - version-update:semver-major

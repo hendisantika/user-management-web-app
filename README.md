@@ -62,7 +62,7 @@ Authentication (MFA), brute force protection, and session management.
 
 ## Quick Start with Docker (Recommended)
 
-The easiest way to run the application is using Docker Compose, which automatically sets up MySQL 9.5.0, Redis, and the
+The easiest way to run the application is using Docker Compose, which automatically sets up MySQL 9.7.2, Redis, and the
 Spring Boot application.
 
 ### Prerequisites for Docker
@@ -83,7 +83,7 @@ Spring Boot application.
    ```
 
    This command will:
-    - Pull MySQL 9.5.0, Redis 7, and build the Spring Boot application
+    - Pull MySQL 9.7.2, Redis 8, and build the Spring Boot application
     - Create a dedicated Docker network for the services
     - Start MySQL on port 3307 (to avoid conflicts with local MySQL)
     - Start Redis on port 6380 (to avoid conflicts with local Redis)
@@ -114,7 +114,7 @@ Spring Boot application.
 
 The Docker setup includes:
 
-- **MySQL 9.5.0**
+- **MySQL 9.7.2**
     - Port: 3307 (external) → 3306 (internal)
     - Database: `user_management`
     - Username: `yu71`
@@ -429,13 +429,13 @@ Run tests with:
 > (`localhost:3306`, `root`/`root`) and Redis (`localhost:6379`) must be running. Quick way to start them:
 >
 > ```bash
-> docker run -d --rm --name ci-mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=user_management -p 3306:3306 mysql:9.5.0
+> docker run -d --rm --name ci-mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=user_management -p 3306:3306 mysql:9.7.2
 > docker run -d --rm --name ci-redis -p 6379:6379 redis:8-alpine
 > ```
 
 #### Integration Testing with Testcontainers
 
-The project includes Testcontainers support for Docker-based integration testing with MySQL 9.5.0:
+The project includes Testcontainers support for Docker-based integration testing with MySQL 9.7.2:
 
 ```bash
 # Run integration tests with Testcontainers
@@ -452,7 +452,7 @@ The project includes Testcontainers support for Docker-based integration testing
 class MySQLContainerTest {
     @Container
     @ServiceConnection
-    static MySQLContainer mysql = new MySQLContainer(DockerImageName.parse("mysql:9.5.0"))
+    static MySQLContainer mysql = new MySQLContainer(DockerImageName.parse("mysql:9.7.2"))
             .withDatabaseName("testdb")
             .withUsername("testuser")
             .withPassword("testpass");
@@ -495,7 +495,7 @@ When running locally, Spring Boot can automatically manage your Docker Compose l
 
 GitHub Actions workflow [`.github/workflows/maven.yml`](.github/workflows/maven.yml) runs on every push and pull request to `main`:
 
-1. Starts **MySQL 9.5.0** and **Redis 8** as service containers
+1. Starts **MySQL 9.7.2** and **Redis 8** as service containers
 2. Sets up **Temurin JDK 25** with Maven dependency caching
 3. Builds and tests the project with `./mvnw -B package`
 4. On push to `main`, submits the Maven dependency graph to GitHub for better Dependabot alerts
