@@ -621,24 +621,51 @@ This project is open source and available for educational purposes.
 
 ## Version History
 
-- **0.0.1-SNAPSHOT** - Current development version
-    - Upgraded to **JDK 25** (pom, Dockerfile & GitHub Actions)
-    - Upgraded to **Spring Boot 4.1.2** / Spring Security 7 (migrated removed APIs)
-    - GitHub Actions CI with MySQL & Redis service containers
-    - Enhanced Dependabot (Maven, GitHub Actions, Docker, Docker Compose with grouping)
-    - Updated to Spring Boot 3.5.7
-    - Migrated from Java EE (javax.*) to Jakarta EE
-    - Updated Spring Security configuration to version 6
-    - Fixed Lombok annotation processing
-    - Added Docker support with Docker Compose
-    - MySQL 9.5.0 integration with custom credentials (user: yu71, password: 53cret)
-    - Multi-stage Dockerfile for optimized image size
-    - Health checks for all services
-    - Persistent MySQL data volumes
-    - Spring Boot Docker Compose support for automatic lifecycle management
-    - Testcontainers integration for Docker-based testing
-    - Cloud Native Buildpacks support for building Docker images
-    - Added comprehensive documentation
+### 0.0.1-SNAPSHOT — Current development version
+
+#### November 2026
+
+**Platform**
+- Upgraded to **JDK 25** (pom, Dockerfile & GitHub Actions) [#40](https://github.com/hendisantika/user-management-web-app/issues/40)
+- Upgraded to **Spring Boot 4.1.2** / Spring Framework 7 / Spring Security 7 and migrated removed APIs [#39](https://github.com/hendisantika/user-management-web-app/issues/39)
+- HTTP sessions stored in Redis via `spring-boot-starter-session-data-redis` [#50](https://github.com/hendisantika/user-management-web-app/issues/50)
+
+**Features**
+- User registration with validation, duplicate email check, MFA QR code and email verification [#47](https://github.com/hendisantika/user-management-web-app/issues/47)
+- Active sessions list on the account page with remote logout of other sessions [#56](https://github.com/hendisantika/user-management-web-app/issues/56)
+
+**Bug Fixes**
+- MFA login always failed: TOTP verifier now uses SHA256 to match the QR code [#54](https://github.com/hendisantika/user-management-web-app/issues/54)
+- Logout failed because the `persistent_logins` (remember-me) table was never created [#57](https://github.com/hendisantika/user-management-web-app/issues/57)
+- Static assets (CSS/JS) were blocked for unauthenticated pages [#46](https://github.com/hendisantika/user-management-web-app/issues/46)
+- Header: Spring Security Thymeleaf dialect (`springsecurity6`), Home link, "Welcome" typo, container timezone [#58](https://github.com/hendisantika/user-management-web-app/issues/58)
+
+**Docker**
+- Spring Boot Docker Compose & Testcontainers (MySQL + Redis via `@ServiceConnection`) [#48](https://github.com/hendisantika/user-management-web-app/issues/48)
+- Docker profile & compose stack run healthy: HTTPS healthcheck, compose Redis on port 6380, `docker` profile in the app container [#49](https://github.com/hendisantika/user-management-web-app/issues/49)
+- Reliable MySQL healthcheck over TCP [#55](https://github.com/hendisantika/user-management-web-app/issues/55)
+- MySQL aligned to **9.7.2** across compose, CI and Testcontainers [#51](https://github.com/hendisantika/user-management-web-app/issues/51) [#53](https://github.com/hendisantika/user-management-web-app/issues/53)
+
+**CI & Tooling**
+- GitHub Actions CI with MySQL & Redis service containers [#39](https://github.com/hendisantika/user-management-web-app/issues/39)
+- Enhanced Dependabot (Maven, GitHub Actions, Docker, Docker Compose with grouping) [#41](https://github.com/hendisantika/user-management-web-app/issues/41)
+
+**Documentation**
+- README updates, application screenshots and `DOCKER_LIBRARIES.md` [#42](https://github.com/hendisantika/user-management-web-app/issues/42) [#45](https://github.com/hendisantika/user-management-web-app/issues/45) [#47](https://github.com/hendisantika/user-management-web-app/issues/47) [#56](https://github.com/hendisantika/user-management-web-app/issues/56) [#58](https://github.com/hendisantika/user-management-web-app/issues/58)
+
+#### Earlier changes
+
+- Updated to Spring Boot 3.5.7
+- Migrated from Java EE (javax.*) to Jakarta EE
+- Updated Spring Security configuration to version 6
+- Fixed Lombok annotation processing
+- Added Docker support with Docker Compose
+- MySQL 9.5.0 integration with custom credentials (user: yu71, password: 53cret)
+- Multi-stage Dockerfile for optimized image size
+- Health checks for all services
+- Persistent MySQL data volumes
+- Cloud Native Buildpacks support for building Docker images
+- Added comprehensive documentation
 
 ## Support
 
