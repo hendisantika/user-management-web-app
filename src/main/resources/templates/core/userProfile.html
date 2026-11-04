@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:th="http://www.thymeleaf.org">
-xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
@@ -9,7 +8,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
             <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a :href="@{/account/home}" class="nav-link">Home</a>
+            <a class="nav-link" th:href="@{/account/home}">Home</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
             <a class="nav-link" href="#">Contact</a>

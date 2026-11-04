@@ -58,11 +58,10 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity5 -->
+        <!-- Thymeleaf "sec:" dialect for Spring Security 6+ (version managed by Spring Boot) -->
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
-            <artifactId>thymeleaf-extras-springsecurity5</artifactId>
-            <version>3.1.5.RELEASE</version>
+            <artifactId>thymeleaf-extras-springsecurity6</artifactId>
         </dependency>
 
         <!-- Spring security session management using the Spring Session and Redis -->

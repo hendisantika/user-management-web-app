@@ -26,6 +26,9 @@ WORKDIR /app
 # Copy the built JAR from build stage
 COPY --from=build /app/target/user-management-web-app-0.0.1-SNAPSHOT.jar app.jar
 
+# Use the application's timezone (e.g. "Last Used" on the active sessions list)
+ENV TZ=Asia/Jakarta
+
 # Create a non-root user
 RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
