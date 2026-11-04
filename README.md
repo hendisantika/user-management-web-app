@@ -39,9 +39,13 @@ Authentication (MFA), brute force protection, and session management.
 |------------------------------------|-----------------|
 | ![Registration success with MFA QR code](img/register-success.png) | ![Duplicate email](img/register-duplicate.png) |
 
-| Account Verified |
-|------------------|
-| ![Account verified](img/register-verified.png) |
+| Account Verified | Account Home (Active Sessions) |
+|------------------|--------------------------------|
+| ![Account verified](img/register-verified.png) | ![Account home with active sessions](img/account-home.png) |
+
+| Logout Another Session | Session Logged Out Remotely |
+|------------------------|-----------------------------|
+| ![Logout another session](img/account-session-logout.png) | ![Session expired](img/session-expired.png) |
 
 ## Technology Stack
 
@@ -388,7 +392,8 @@ The application supports the following roles:
 
 ### 4. Session Management
 
-- Redis-backed session storage
+- Redis-backed session storage (indexed Spring Session repository)
+- Active sessions list on the account page with remote logout of other sessions
 - Session fixation protection
 - Remember-me functionality
 - Concurrent session control
