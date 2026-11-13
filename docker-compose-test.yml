@@ -3,7 +3,7 @@
 
 services:
   mysql-test:
-    image: mysql:9.7.2
+    image: mysql:9.7.4
     container_name: mysql-test
     environment:
       MYSQL_ROOT_PASSWORD: 53cret
@@ -19,7 +19,7 @@ services:
       retries: 5
 
   test-client:
-    image: mysql:9.7.2
+    image: mysql:9.7.4
     depends_on:
       mysql-test:
         condition: service_healthy
